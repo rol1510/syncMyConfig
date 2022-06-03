@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"syncMyConf/src"
 
 	"github.com/devfacet/gocmd/v3"
 )
@@ -54,6 +55,7 @@ func main() {
 
 	gocmd.HandleFlag("Push", func(cmd *gocmd.Cmd, args []string) error {
 		fmt.Println("running push")
+		src.Push()
 		return nil
 	})
 
@@ -76,5 +78,4 @@ func main() {
 		Flags:       &flags,
 		ConfigType:  gocmd.ConfigTypeAuto,
 	})
-	// src.Do()
 }

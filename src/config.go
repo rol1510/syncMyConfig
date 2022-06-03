@@ -8,19 +8,23 @@ import (
 )
 
 type SyncConfig struct {
-	ConfVersion int `yaml:"conf_version"`
-	Machines    []struct {
-		Name string `yaml:"name"`
-		Maps []struct {
-			File string `yaml:"file"`
-			To   string `yaml:"to"`
-		} `yaml:"maps,omitempty"`
-	} `yaml:"machines"`
+	Machines []Machine `yaml:"machines"`
+}
+
+type Map struct {
+	Repo string `yaml:"repo"`
+	Dest string `yaml:"dest"`
+}
+
+type Machine struct {
+	Name string `yaml:"name"`
+	Maps []Map  `yaml:"maps,omitempty"`
 }
 
 type EnvConfig struct {
 	Machine        string `yaml:"machine"`
 	ConfigFilePath string `yaml:"configFile"`
+	FileDirPath    string `yaml:"fileDir"`
 }
 
 func readEntireFile(path string) []byte {
@@ -55,6 +59,11 @@ func parseSyncConfigFile(path string) SyncConfig {
 	return syncConf
 }
 
+// func GetSyncConfigFile() SyncConfig {
+// 	env := parseEnvConfigFile("./environment.yaml")
+// 	return parseSyncConfigFile(env.ConfigFilePath)
+// }
+
 func Do() {
 	envConfig := parseEnvConfigFile("./environment.yaml")
 	syncConfig := parseSyncConfigFile(envConfig.ConfigFilePath)
@@ -63,7 +72,6 @@ func Do() {
 	fmt.Println(envConfig.Machine)
 	fmt.Println("---")
 
-	fmt.Println(syncConfig.ConfVersion)
 	fmt.Println(syncConfig.Machines)
 	fmt.Println(syncConfig.Machines[0].Name)
 	fmt.Println(syncConfig.Machines[0].Maps)
