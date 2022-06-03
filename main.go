@@ -61,6 +61,7 @@ func main() {
 
 	gocmd.HandleFlag("Pull", func(cmd *gocmd.Cmd, args []string) error {
 		fmt.Println("running pull")
+		src.Pull()
 		return nil
 	})
 

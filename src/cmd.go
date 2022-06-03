@@ -5,7 +5,7 @@ import (
 	"path"
 )
 
-func Push() {
+func setup() (EnvConfig, SyncConfig, Machine) {
 	envConfig := parseEnvConfigFile("./environment.yaml")
 	syncConfig := parseSyncConfigFile(envConfig.ConfigFilePath)
 
@@ -15,9 +15,12 @@ func Push() {
 			current = machine
 		}
 	}
+	fmt.Printf("machine name: %s\n", current.Name)
+	return envConfig, syncConfig, current
+}
 
-	// fmt.Println(current.Name)
-	// fmt.Println(current.Maps)
+func Push() {
+	envConfig, _, current := setup()
 
 	for _, m := range current.Maps {
 		// pwd, _ := os.Getwd()
@@ -30,11 +33,20 @@ func Push() {
 			panic(err)
 		}
 	}
-	fmt.Println("")
+}
 
-	// for i, map := range current.Maps {
-	// fmt.Sprintf("%s -> %s", map.repo, map.dest)
-	// Copy(map.repo, map.dest)
-	// }
+func Pull() {
+	envConfig, _, current := setup()
 
+	for _, m := range current.Maps {
+		// pwd, _ := os.Getwd()
+		// fmt.Println(envConfig.FileDirPath)
+		src := path.Join(envConfig.FileDirPath, m.Repo)
+		fmt.Printf("%s -> %s\n", m.Dest, src)
+
+		_, err := Copy(m.Dest, src)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }
